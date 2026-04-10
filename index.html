@@ -270,7 +270,102 @@ footer{
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
   border-top:none;
 }
+.ai-btn{
+  position:fixed;bottom:2rem;right:2rem;z-index:999;
+  background:#0a0a0a;color:#ffffff;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;font-weight:700;
+  padding:1rem 2rem;border:2px solid #ffffff;cursor:pointer;
+  display:flex;align-items:center;gap:0.6rem;
+  transition:background 0.2s,color 0.2s;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.ai-btn:hover{background:#ffffff;color:#0a0a0a;}
+
+.ai-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.7);
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.ai-overlay.open{display:flex;}
+.ai-box{
+  background:#0a0a0a;border:1px solid #2a2a2a;
+  width:90%;max-width:480px;
+  display:flex;flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+}
+.ai-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.5rem 2rem;
+  border-bottom:1px solid #1a1a1a;
+  background:#111;
+}
+.ai-header-left{display:flex;flex-direction:column;gap:0.2rem;}
+.ai-header h3{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.5rem;letter-spacing:0.12em;color:#ffffff;
+  margin:0;
+}
+.ai-header span{
+  font-family:'Barlow',sans-serif;
+  font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:#555;
+}
+.ai-close{
+  background:#1a1a1a;border:1px solid #2a2a2a;color:#888;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:pointer;transition:all 0.2s;
+}
+.ai-close:hover{background:#ffffff;color:#000000;border-color:#ffffff;}
+.ai-messages{
+  flex:1;overflow-y:auto;padding:1.5rem 2rem;
+  display:flex;flex-direction:column;gap:1rem;
+  min-height:280px;max-height:320px;
+  background:#0a0a0a;
+  scrollbar-width:thin;scrollbar-color:#222 #0a0a0a;
+}
+.ai-msg{
+  font-family:'Barlow',sans-serif;font-size:0.88rem;line-height:1.75;
+  padding:1rem 1.2rem;max-width:88%;
+}
+.ai-msg.bot{
+  background:#111;color:#e0e0e0;
+  border-left:3px solid #ffffff;
+  align-self:flex-start;
+}
+.ai-msg.bot strong{color:#ffffff;}
+.ai-msg.user{
+  background:#ffffff;color:#000000;
+  align-self:flex-end;
+  font-weight:500;
+}
+.ai-msg.typing{
+  color:#555;font-style:italic;
+  background:#111;border-left:3px solid #333;
+  align-self:flex-start;padding:1rem 1.2rem;
+}
+.ai-input-row{
+  display:flex;border-top:1px solid #1a1a1a;
+}
+.ai-input-row input{
+  flex:1;background:#111;border:none;color:#ffffff;
+  padding:1.2rem 1.5rem;
+  font-family:'Barlow',sans-serif;font-size:0.88rem;
+  outline:none;
+}
+.ai-input-row input::placeholder{color:#444;}
+.ai-send{
+  background:#ffffff;color:#000000;border:none;
+  padding:1.2rem 1.8rem;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;
+  cursor:pointer;transition:background 0.2s;
+  white-space:nowrap;
+}
+.ai-send:hover{background:#e0e0e0;}
 footer .logo{font-size:1.5rem;color:var(--white);}
+footer p{font-family:'Barlow',sans-serif;font-size:0.72rem;color:#555555;letter-spacing:0.1em;}
 footer p{font-family:'Barlow',sans-serif;font-size:0.72rem;color:#555555;letter-spacing:0.1em;}
 </style>
 </head>
@@ -409,6 +504,149 @@ footer p{font-family:'Barlow',sans-serif;font-size:0.72rem;color:#555555;letter-
 </div>
   <p>Designed with ambition.</p>
 </footer>
+<!-- AI STYLIST BUTTON -->
+<button class="ai-btn" onclick="document.getElementById('aiOverlay').classList.add('open')">
+  AI Stylist
+</button>
+
+<!-- AI STYLIST POPUP -->
+<div class="ai-overlay" id="aiOverlay">
+  <div class="ai-box">
+    <div class="ai-header">
+  <div class="ai-header-left">
+    <h3>AI Stylist</h3>
+    <span>Smart Hustler — Personal Style Advisor</span>
+  </div>
+      <button class="ai-close" onclick="document.getElementById('aiOverlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="ai-messages" id="aiMessages">
+      <div class="ai-msg bot">Hey! I'm your Smart Hustler stylist 🔥 Tell me about your style, body type, or occasion and I'll tell you which hoodie fits you best!</div>
+    </div>
+    <div class="ai-input-row">
+      <input type="text" id="aiInput" placeholder="e.g. I like bold styles, I'm tall..." onkeydown="if(event.key==='Enter') sendAiMessage()"/>
+      <button class="ai-send" onclick="sendAiMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const conversations = [];
+
+const responses = [
+  {
+    triggers: ['bold', 'strong', 'powerful', 'dragon', 'aggressive', 'hard'],
+    reply: "The <strong>Dragon Phoenix Hoodie</strong> is 100% you 🐉 Bold dragon logo on the front, phoenix rising on the back. Pure power. $149 — want me to show you how to style it?"
+  },
+  {
+    triggers: ['gold', 'premium', 'clean', 'elegant', 'wings', 'elevated', 'luxury'],
+    reply: "You're a <strong>Gold Wings Hoodie</strong> person ✨ Gold wings on the shoulders, clean circle H logo. Elevated streetwear at its best. $169 — interested?"
+  },
+  {
+    triggers: ['tall', 'big', 'large', 'oversized'],
+    reply: "Tall guys look insane in the <strong>Dragon Phoenix Hoodie</strong> 🔥 The oversized dragon print hits different on a tall frame. $149 — what occasions do you wear hoodies for?"
+  },
+  {
+    triggers: ['short', 'small', 'slim', 'skinny', 'thin'],
+    reply: "For your frame the <strong>Gold Wings Hoodie</strong> is perfect 💪 The clean logo keeps it sharp and the gold wings add presence. $169 — do you prefer bold or minimal styles?"
+  },
+  {
+    triggers: ['party', 'night', 'club', 'out', 'event'],
+    reply: "Night out? <strong>Gold Wings Hoodie</strong> no question 🌙 The gold details catch the light perfectly. You'll be the most unique one in the room. $169!"
+  },
+  {
+    triggers: ['casual', 'everyday', 'daily', 'school', 'simple'],
+    reply: "For everyday wear go with the <strong>Dragon Phoenix Hoodie</strong> 🐉 Clean white, strong logo — simple but hard. Perfect for any day. $149!"
+  },
+  {
+    triggers: ['gym', 'sport', 'workout', 'athletic', 'training', 'fitness'],
+    reply: "Gym drip? <strong>Dragon Phoenix Hoodie</strong> — the phoenix on the back represents rising after every grind 💪 That's the Smart Hustler mentality. $149!"
+  },
+  {
+    triggers: ['gift', 'present', 'someone', 'friend', 'brother'],
+    reply: "Best gift choice is the <strong>Gold Wings Hoodie</strong> 🎁 It looks premium, the gold details make it feel special. Anyone would love it. $169 — who's it for?"
+  },
+  {
+    triggers: ['style', 'how', 'wear', 'outfit', 'match', 'pair'],
+    reply: "Great question! Both hoodies look fire with black cargo pants or white joggers. Add clean white sneakers and you're set 🔥 Which hoodie do you have in mind?"
+  },
+  {
+    triggers: ['both', 'difference', 'which', 'compare', 'better'],
+    reply: "Here's the breakdown:\n\n🐉 <strong>Dragon Phoenix</strong> — $149\nBold, raw, powerful. Dragon front, phoenix back.\n\n✨ <strong>Gold Wings</strong> — $169\nClean, premium, elevated. Gold wings, circle H logo.\n\nWhat's your vibe — bold or clean?"
+  },
+  {
+    triggers: ['price', 'cost', 'expensive', 'cheap', 'afford', 'money'],
+    reply: "Both are premium quality:\n\n• <strong>Dragon Phoenix Hoodie</strong> — $149\n• <strong>Gold Wings Hoodie</strong> — $169\n\nWhich style speaks to you more?"
+  },
+  {
+    triggers: ['yes', 'sure', 'ok', 'okay', 'cool', 'nice', 'great', 'sounds'],
+    reply: "Let's get you set up! 🔥 You can order directly via WhatsApp or reach out through our contact form. Any other questions about the fit or style?"
+  },
+  {
+    triggers: ['no', 'nah', 'not'],
+    reply: "No worries! Take your time — both hoodies will always be here 😄 Anything else I can help you with?"
+  },
+  {
+    triggers: ['color', 'colour', 'white', 'black'],
+    reply: "Both hoodies come in <strong>clean white</strong> with black or gold prints 🤍 The white makes the designs really pop. Perfect canvas for the dragon and phoenix artwork!"
+  },
+  {
+    triggers: ['size', 'sizing', 'fit', 'xs', 'sm', 'md', 'lg', 'xl'],
+    reply: "We carry sizes XS to XL 📏 Both hoodies have a relaxed streetwear fit — if you're between sizes we recommend going up for that oversized look. What's your usual size?"
+  },
+  {
+    triggers: ['order', 'buy', 'purchase', 'get', 'want'],
+    reply: "Ready to cop? 🔥 Hit the WhatsApp button on our site to order directly — we'll sort out your size and shipping! Which hoodie are you going for?"
+  },
+  {
+    triggers: ['ship', 'delivery', 'shipping', 'deliver', 'receive'],
+    reply: "We ship worldwide! 🌍 Delivery times depend on your location. Hit us up on WhatsApp for exact shipping info to your country!"
+  },
+  {
+    triggers: ['hello', 'hi', 'hey', 'sup', 'yo', 'salut', 'bonjour'],
+    reply: "Hey! Welcome to Smart Hustler 👋 I'm your personal stylist. Tell me about your style or what occasion you're dressing for and I'll find your perfect hoodie!"
+  },
+  {
+    triggers: ['thanks', 'thank', 'merci', 'appreciate'],
+    reply: "Anytime! That's what we're here for 🙏 No gain without smart hard work — and no fit without the right hoodie 😄 Anything else?"
+  }
+];
+
+function sendAiMessage() {
+  const input = document.getElementById('aiInput');
+  const messages = document.getElementById('aiMessages');
+  const userText = input.value.trim();
+  if (!userText) return;
+
+  messages.innerHTML += `<div class="ai-msg user">${userText}</div>`;
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+
+  const typingId = 'typing_' + Date.now();
+  messages.innerHTML += `<div class="ai-msg typing" id="${typingId}">...</div>`;
+  messages.scrollTop = messages.scrollHeight;
+
+  setTimeout(() => {
+    const lower = userText.toLowerCase();
+    let reply = null;
+
+    for (const r of responses) {
+      if (r.triggers.some(t => lower.includes(t))) {
+        reply = r.reply;
+        break;
+      }
+    }
+
+    if (!reply) {
+      reply = "Interesting! Tell me more — are you going for a <strong>bold powerful look</strong> or something more <strong>clean and premium</strong>? That'll help me find your perfect fit! 🔥";
+    }
+
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) typingEl.remove();
+    messages.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
+    messages.scrollTop = messages.scrollHeight;
+  }, 1000);
+}
+</script>
 
 </body>
 </html>
