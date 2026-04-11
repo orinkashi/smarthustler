@@ -530,7 +530,70 @@ footer p{font-family:'Barlow',sans-serif;font-size:0.72rem;color:#555555;letter-
 </div>
 
 <script>
-async function sendAiMessage() {
+const responses = [
+  {
+    triggers: ['bold', 'strong', 'powerful', 'dragon', 'aggressive', 'hard'],
+    reply: "You're built for the <strong>Dragon Phoenix Hoodie</strong> 🐉 Bold dragon logo on the front, phoenix rising on the back. Pure power. $149 — want me to show you how to style it?"
+  },
+  {
+    triggers: ['gold', 'premium', 'clean', 'elegant', 'wings', 'elevated', 'luxury'],
+    reply: "You're a <strong>Gold Wings Hoodie</strong> person ✨ Gold wings on the shoulders, clean circle H logo. Elevated streetwear at its best. $169 — interested?"
+  },
+  {
+    triggers: ['tall', 'big', 'large', 'oversized'],
+    reply: "Tall guys look insane in the <strong>Dragon Phoenix Hoodie</strong> 🔥 The oversized dragon print hits different on a tall frame. $149!"
+  },
+  {
+    triggers: ['short', 'small', 'slim', 'skinny'],
+    reply: "For your frame the <strong>Gold Wings Hoodie</strong> is perfect 💪 The clean logo keeps it sharp. $169!"
+  },
+  {
+    triggers: ['party', 'night', 'club', 'out', 'event'],
+    reply: "Night out? <strong>Gold Wings Hoodie</strong> no question 🌙 The gold details catch the light perfectly. $169!"
+  },
+  {
+    triggers: ['casual', 'everyday', 'daily', 'school'],
+    reply: "For everyday wear go with the <strong>Dragon Phoenix Hoodie</strong> 🐉 Clean white, strong logo. $149!"
+  },
+  {
+    triggers: ['gym', 'sport', 'workout', 'athletic'],
+    reply: "Gym drip? <strong>Dragon Phoenix Hoodie</strong> — the phoenix on the back represents rising after every grind 💪 $149!"
+  },
+  {
+    triggers: ['gift', 'present', 'friend', 'brother'],
+    reply: "Best gift? The <strong>Gold Wings Hoodie</strong> 🎁 Looks premium, gold details make it special. $169!"
+  },
+  {
+    triggers: ['both', 'difference', 'which', 'compare'],
+    reply: "🐉 <strong>Dragon Phoenix</strong> ($149) = Bold, raw, powerful.<br>✨ <strong>Gold Wings</strong> ($169) = Clean, premium, elevated.<br>What's your vibe?"
+  },
+  {
+    triggers: ['price', 'cost', 'money'],
+    reply: "• <strong>Dragon Phoenix Hoodie</strong> — $149<br>• <strong>Gold Wings Hoodie</strong> — $169<br>Both premium quality! Which style speaks to you?"
+  },
+  {
+    triggers: ['size', 'sizing', 'fit'],
+    reply: "We carry sizes XS to XL 📏 Both hoodies have a relaxed streetwear fit. What's your usual size?"
+  },
+  {
+    triggers: ['order', 'buy', 'purchase', 'want'],
+    reply: "Ready to cop? 🔥 Hit the WhatsApp button on our site to order directly!"
+  },
+  {
+    triggers: ['hello', 'hi', 'hey', 'sup', 'yo'],
+    reply: "Hey! Welcome to Smart Hustler 👋 Tell me about your style and I'll find your perfect hoodie!"
+  },
+  {
+    triggers: ['thanks', 'thank', 'bye', 'goodbye'],
+    reply: "Anytime! 🙏 No gain without smart hard work — and no fit without the right hoodie 😄"
+  },
+  {
+    triggers: ['style', 'how', 'wear', 'outfit', 'match'],
+    reply: "Both hoodies look fire with black cargo pants or white joggers. Add clean white sneakers and you're set 🔥 Which hoodie do you have in mind?"
+  }
+];
+
+function sendAiMessage() {
   const input = document.getElementById('aiInput');
   const messages = document.getElementById('aiMessages');
   const userText = input.value.trim();
@@ -538,70 +601,42 @@ async function sendAiMessage() {
 
   messages.innerHTML += `<div class="ai-msg user">${userText}</div>`;
   input.value = '';
+  messages.scrollTop = messages.scrollHeight;
 
   const typingId = 'typing_' + Date.now();
   messages.innerHTML += `<div class="ai-msg typing" id="${typingId}">...</div>`;
   messages.scrollTop = messages.scrollHeight;
 
-  try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer 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',
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://orinkashi.github.io/smarthustler',
-        'X-Title': 'Smart Hustler'
-      },
-      body: JSON.stringify({
-        model: 'openai/gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are the Smart Hustler AI Stylist. Smart Hustler has 2 hoodies: 1. Dragon Phoenix Hoodie $149 - bold powerful vibe, dragon front, phoenix back. 2. Gold Wings Hoodie $169 - premium elevated vibe, gold wings front, dragon back. Be friendly, energetic, use streetwear language. Keep answers short and punchy. Always recommend a hoodie.'
-          },
-          {
-            role: 'user',
-            content: userText
-          }
-        ]
-      })
-    });
+  setTimeout(() => {
+    const lower = userText.toLowerCase();
+    let reply = null;
+    let showLink = false;
 
-    const data = await response.json();
-    document.getElementById(typingId).remove();
-    const reply = data.choices[0].message.content;
-    let imageHtml = '';
-if (reply.toLowerCase().includes('dragon phoenix')) {
-  imageHtml = `<img src="Smart (1).png" style="width:100%;margin-top:0.8rem;border:1px solid #333;"/>`;
-} else if (reply.toLowerCase().includes('gold wings')) {
-  imageHtml = `<img src="Hoodie_blanc_avec_logo_et_ailes_dorées.png" style="width:100%;margin-top:0.8rem;border:1px solid #333;"/>`;
-}
-let linkHtml = '';
-if (reply.toLowerCase().includes('dragon phoenix') || reply.toLowerCase().includes('gold wings') || reply.toLowerCase().includes('hoodie')) {
-  linkHtml = `<a href="#products" onclick="document.getElementById('aiOverlay').classList.remove('open')" style="display:inline-block;margin-top:0.8rem;background:#ffffff;color:#000000;padding:0.6rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;text-decoration:none;">View Collection →</a>`;
-}
-messages.innerHTML += `<div class="ai-msg bot">${reply}${linkHtml}</div>`;
+    for (const r of responses) {
+      if (r.triggers.some(t => lower.includes(t))) {
+        reply = r.reply;
+        break;
+      }
+    }
+
+    if (!reply) {
+      reply = "Tell me more! Are you into <strong>bold & powerful</strong> looks or <strong>clean & premium</strong> vibes? 🔥";
+    }
+
+    if (reply.toLowerCase().includes('dragon phoenix') || reply.toLowerCase().includes('gold wings') || reply.toLowerCase().includes('hoodie')) {
+      showLink = true;
+    }
+
+    const linkHtml = showLink ? `<br><a href="#products" onclick="document.getElementById('aiOverlay').classList.remove('open')" style="display:inline-block;margin-top:0.8rem;background:#ffffff;color:#000000;padding:0.6rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;text-decoration:none;">View Collection →</a>` : '';
+
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) typingEl.remove();
+    messages.innerHTML += `<div class="ai-msg bot">${reply}${linkHtml}</div>`;
     messages.scrollTop = messages.scrollHeight;
-
-  } catch(e) {
-    document.getElementById(typingId).remove();
-    messages.innerHTML += `<div class="ai-msg bot">Something went wrong, try again! 🙏</div>`;
-  }
+  }, 1000);
 }
 </script>
-<!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/69da928a9f035d1c3261b91a/1jlusorj2';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
+
 
 </body>
 </body>
