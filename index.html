@@ -530,7 +530,90 @@ footer p{font-family:'Barlow',sans-serif;font-size:0.72rem;color:#555555;letter-
 </div>
 
 <script>
-async function sendAiMessage() {
+const responses = [
+  {
+    triggers: ['bold', 'strong', 'powerful', 'dragon', 'aggressive', 'hard', 'fierce', 'intense'],
+    reply: "Bro you're MADE for the <strong>Dragon Phoenix Hoodie</strong> 🐉<br><br>Here's why:<br>• Dragon H logo on the front — pure dominance<br>• Phoenix rising on the back — you never stay down<br>• Clean white base that makes the design POP<br>• Relaxed fit, premium cotton<br><br>This hoodie tells a story. People will ask about it. <strong>$149</strong> — worth every penny 💪"
+  },
+  {
+    triggers: ['gold', 'premium', 'clean', 'elegant', 'wings', 'elevated', 'luxury', 'classy', 'refined'],
+    reply: "You've got taste 👌 The <strong>Gold Wings Hoodie</strong> is calling your name ✨<br><br>What makes it special:<br>• Gold wings on the shoulders — you walk in, heads turn<br>• Circle H logo — subtle but powerful<br>• Gold dragon on the back — for those who look twice<br>• Premium feel, elevated streetwear<br><br>This is the hoodie for someone who doesn't need to shout to be noticed. <strong>$169</strong> 🔥"
+  },
+  {
+    triggers: ['tall', 'big', 'large', 'oversized', '6', 'feet'],
+    reply: "Tall frame? BIG W 💪 The <strong>Dragon Phoenix Hoodie</strong> was built for you!<br><br>Here's the thing — the dragon print on the front looks INSANE on a tall frame. The phoenix on the back gets full display. You become a walking piece of art 🐉<br><br>Style it with:<br>• Black cargo pants<br>• White Air Force 1s<br>• Keep it simple — let the hoodie talk<br><br><strong>$149</strong> — cop it!"
+  },
+  {
+    triggers: ['short', 'small', 'slim', 'skinny', 'thin', 'petite'],
+    reply: "The <strong>Gold Wings Hoodie</strong> is your move 🎯<br><br>The clean circle H logo keeps it proportional and sharp. The gold wings on the shoulders add width — makes you look broader and more powerful instantly ✨<br><br>Style tip:<br>• Slim fit joggers<br>• Clean white sneakers<br>• Don't overdo accessories — let the hoodie shine<br><br><strong>$169</strong> — trust the process 💪"
+  },
+  {
+    triggers: ['party', 'night', 'club', 'out', 'event', 'dinner', 'date'],
+    reply: "Night out? Easy answer — <strong>Gold Wings Hoodie</strong> 🌙<br><br>Here's why it WINS at night:<br>• Gold details catch every light in the room<br>• Premium look — you're dressed up without being overdressed<br>• The dragon back print is a conversation starter<br>• People will ask 'where did you get that?'<br><br>Style it with dark jeans and clean kicks. You'll be the most unique person there — guaranteed 🔥<br><br><strong>$169</strong>"
+  },
+  {
+    triggers: ['casual', 'everyday', 'daily', 'school', 'college', 'university', 'chill'],
+    reply: "For everyday drip the <strong>Dragon Phoenix Hoodie</strong> is your go-to 🐉<br><br>Why it works daily:<br>• Clean white base — matches EVERYTHING<br>• Bold logo keeps it interesting<br>• Comfortable enough for all-day wear<br>• Still looks intentional, never sloppy<br><br>Pair it with:<br>• Grey sweatpants or black jeans<br>• Any clean sneaker<br>• A black cap optional<br><br><strong>$149</strong> — your new uniform 💪"
+  },
+  {
+    triggers: ['gym', 'sport', 'workout', 'athletic', 'training', 'fitness', 'exercise'],
+    reply: "GYM DRIP 💪 <strong>Dragon Phoenix Hoodie</strong> — no debate!<br><br>The phoenix on the back isn't just design — it's a MINDSET. Every time you train, you rise. Every rep, every set, you're becoming the phoenix 🔥<br><br>The dragon front? That's the beast you're becoming.<br><br>This hoodie hits different when you're putting in work. Pre-workout, post-workout, rest days — it's always valid.<br><br><strong>$149</strong> — earn it in the gym 🐉"
+  },
+  {
+    triggers: ['gift', 'present', 'friend', 'brother', 'sister', 'birthday', 'christmas', 'someone'],
+    reply: "Best gift idea right here 🎁<br><br>I'd go <strong>Gold Wings Hoodie</strong> for a gift — here's why:<br>• Opens the box = instant WOW reaction ✨<br>• Gold details look EXPENSIVE<br>• Anyone can rock it — versatile style<br>• The wings mean freedom and ambition — deep meaning<br>• Premium quality they'll actually wear<br><br>Trust me — they won't forget who got them this 😄<br><br><strong>$169</strong> — greatest gift W"
+  },
+  {
+    triggers: ['both', 'difference', 'which', 'compare', 'better', 'choose', 'pick'],
+    reply: "Great question — let me break it down 🔥<br><br>🐉 <strong>Dragon Phoenix Hoodie — $149</strong><br>→ Bold, raw, powerful energy<br>→ Dragon H logo front + phoenix back<br>→ For those who want to STAND OUT<br>→ Best for: gym, school, casual, making moves<br><br>✨ <strong>Gold Wings Hoodie — $169</strong><br>→ Clean, premium, elevated vibe<br>→ Gold wings front + circle H + dragon back<br>→ For those who let their PRESENCE speak<br>→ Best for: nights out, events, flex moments<br><br>Both are 🔥 — which energy do YOU bring?"
+  },
+  {
+    triggers: ['price', 'cost', 'money', 'expensive', 'cheap', 'afford', 'budget'],
+    reply: "Here's the full breakdown 💰<br><br>🐉 <strong>Dragon Phoenix Hoodie</strong><br>Price: <strong>$149</strong><br>Value: Premium cotton, bold design, statement piece<br><br>✨ <strong>Gold Wings Hoodie</strong><br>Price: <strong>$169</strong><br>Value: Gold detailing, elevated look, luxury streetwear<br><br>Both are investment pieces — not fast fashion. You buy once, you wear for years. That's the Smart Hustler way 💪<br><br>Which one fits your budget?"
+  },
+  {
+    triggers: ['size', 'sizing', 'fit', 'xs', 'small', 'medium', 'large', 'xl', 'xxl', 'measurements'],
+    reply: "Size guide 📏<br><br>We carry: <strong>XS / S / M / L / XL</strong><br><br>Both hoodies have a <strong>relaxed streetwear fit</strong> — comfortable but structured.<br><br>Sizing tips:<br>• Want that oversized look? → go one size UP<br>• Want a cleaner fit? → stick to your normal size<br>• Between sizes? → we recommend going UP<br><br>Not sure? Hit us on WhatsApp with your height and weight — we'll sort you out! 💪"
+  },
+  {
+    triggers: ['order', 'buy', 'purchase', 'want', 'cop', 'get', 'grab'],
+    reply: "Let's GET IT 🔥<br><br>Here's how to order:<br>1. Choose your hoodie (Dragon Phoenix or Gold Wings)<br>2. Pick your size (XS-XL)<br>3. Hit the <strong>WhatsApp button</strong> on our site<br>4. Send us: hoodie name + size + your address<br>5. We confirm and ship! 🚀<br><br>Any questions about ordering? I got you 💪"
+  },
+  {
+    triggers: ['ship', 'delivery', 'shipping', 'deliver', 'receive', 'when', 'how long'],
+    reply: "Shipping info 🌍<br><br>• We ship <strong>worldwide</strong><br>• Delivery time depends on your location<br>• Morocco 🇲🇦: 3-5 days<br>• Europe: 7-10 days<br>• Rest of world: 10-15 days<br><br>For exact shipping cost and timing for YOUR location — hit us on WhatsApp! We'll give you all the details 📦"
+  },
+  {
+    triggers: ['hello', 'hi', 'hey', 'sup', 'yo', 'salam', 'bonjour', 'hola', 'start'],
+    reply: "Hey! Welcome to <strong>Smart Hustler</strong> 👋🔥<br><br>I'm your personal style advisor. I'm here to help you find the perfect hoodie for YOUR vibe.<br><br>Tell me:<br>• What's your style? (bold / clean / premium)<br>• What's the occasion? (everyday / night out / gym)<br>• Or just describe yourself and I'll find your fit!<br><br>Let's get you looking 🔥"
+  },
+  {
+    triggers: ['thanks', 'thank', 'appreciate', 'merci', 'شكرا'],
+    reply: "Anytime fam! 🙏 That's what Smart Hustler is about — we take care of our people.<br><br>Remember: <em>No gain without smart hard work</em> 💪<br><br>Any other questions? I'm right here! 🔥"
+  },
+  {
+    triggers: ['bye', 'goodbye', 'see you', 'later', 'ciao'],
+    reply: "Stay hustling! 💪 Come back whenever you're ready to cop.<br><br>Remember — <em>Work hard in silence, but move smart in strategy.</em> 🐉<br><br>Smart Hustler always got you! 🔥"
+  },
+  {
+    triggers: ['style', 'how', 'wear', 'outfit', 'match', 'pair', 'combine'],
+    reply: "Outfit guide 🔥<br><br>🐉 <strong>Dragon Phoenix Hoodie styling:</strong><br>• Black cargo pants + white Air Force 1s<br>• Grey sweatpants + black sneakers<br>• Dark jeans + any clean shoe<br><br>✨ <strong>Gold Wings Hoodie styling:</strong><br>• Black slim jeans + white sneakers<br>• Dark cargo pants + gold accessories<br>• Keep it minimal — let the hoodie be the statement<br><br>Rule: <strong>Simple fits + bold hoodie = always fire</strong> 🎯"
+  },
+  {
+    triggers: ['color', 'colour', 'white', 'black', 'design'],
+    reply: "Both hoodies come in <strong>clean white</strong> 🤍<br><br>Why white works so well:<br>• Makes the dragon and phoenix designs POP<br>• Versatile — matches any outfit color<br>• Clean and fresh look always<br>• Gold details on the Wings hoodie shine even more on white<br><br>White is the Smart Hustler signature — bold designs on a clean canvas 🎨"
+  },
+  {
+    triggers: ['quality', 'material', 'fabric', 'cotton', 'feel', 'soft'],
+    reply: "Quality is everything at Smart Hustler 💪<br><br>Both hoodies feature:<br>• <strong>Premium heavyweight cotton</strong><br>• Soft inner lining for comfort<br>• Durable print that won't crack or fade<br>• Reinforced stitching<br>• Kangaroo pocket<br><br>We don't do fast fashion. Every hoodie is built to last 🔥<br><br>Any other questions?"
+  },
+  {
+    triggers: ['brand', 'story', 'about', 'who', 'what is'],
+    reply: "Smart Hustler 🐉✨<br><br>Born from one belief: <em>ambition deserves to look as good as it feels.</em><br><br>We create clothing for the dreamers, the builders, the ones who never stop moving. Every piece carries a message:<br><br><strong>No gain without smart hard work.</strong><br><br>The dragon. The phoenix. The wings. Each symbol tells a story of resilience, vision, and power.<br><br>This is not just clothing. It's a mindset you wear every day 💪"
+  }
+];
+
+function sendAiMessage() {
   const input = document.getElementById('aiInput');
   const messages = document.getElementById('aiMessages');
   const userText = input.value.trim();
@@ -538,47 +621,35 @@ async function sendAiMessage() {
 
   messages.innerHTML += `<div class="ai-msg user">${userText}</div>`;
   input.value = '';
+  messages.scrollTop = messages.scrollHeight;
 
   const typingId = 'typing_' + Date.now();
   messages.innerHTML += `<div class="ai-msg typing" id="${typingId}">...</div>`;
   messages.scrollTop = messages.scrollHeight;
 
-  try {
-    const response = await fetch('http://localhost:11434/api/chat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: 'glm-5.1:cloud',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are the Smart Hustler AI Stylist. Smart Hustler has 2 hoodies: 1. Dragon Phoenix Hoodie $149 - bold powerful vibe, dragon front, phoenix back. 2. Gold Wings Hoodie $169 - premium elevated vibe, gold wings front, dragon back. Be friendly, energetic, use streetwear language. Keep answers short and punchy. Always recommend a hoodie.'
-          },
-          {
-            role: 'user',
-            content: userText
-          }
-        ],
-        stream: false
-      })
-    });
+  setTimeout(() => {
+    const lower = userText.toLowerCase();
+    let reply = null;
 
-    const data = await response.json();
-    document.getElementById(typingId).remove();
-    const reply = data.message.content;
-
-    let linkHtml = '';
-    if (reply.toLowerCase().includes('dragon phoenix') || reply.toLowerCase().includes('gold wings') || reply.toLowerCase().includes('hoodie')) {
-      linkHtml = `<br><a href="#products" onclick="document.getElementById('aiOverlay').classList.remove('open')" style="display:inline-block;margin-top:0.8rem;background:#ffffff;color:#000000;padding:0.6rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;text-decoration:none;">View Collection →</a>`;
+    for (const r of responses) {
+      if (r.triggers.some(t => lower.includes(t))) {
+        reply = r.reply;
+        break;
+      }
     }
 
+    if (!reply) {
+      reply = "Good question! Tell me more about your vibe 🔥<br><br>Are you into:<br>• <strong>Bold & powerful</strong> looks? (Dragon Phoenix 🐉)<br>• <strong>Clean & premium</strong> vibes? (Gold Wings ✨)<br>• Or tell me the occasion and I'll pick for you!";
+    }
+
+    const showLink = reply.toLowerCase().includes('dragon phoenix') || reply.toLowerCase().includes('gold wings') || reply.toLowerCase().includes('hoodie');
+    const linkHtml = showLink ? `<br><br><a href="#products" onclick="document.getElementById('aiOverlay').classList.remove('open')" style="display:inline-block;margin-top:0.5rem;background:#ffffff;color:#000000;padding:0.6rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;text-decoration:none;">View Collection →</a>` : '';
+
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) typingEl.remove();
     messages.innerHTML += `<div class="ai-msg bot">${reply}${linkHtml}</div>`;
     messages.scrollTop = messages.scrollHeight;
-
-  } catch(e) {
-    document.getElementById(typingId).remove();
-    messages.innerHTML += `<div class="ai-msg bot">Make sure Ollama is running on your PC! 🙏</div>`;
-  }
+  }, 1000);
 }
 </script>
 </body>
